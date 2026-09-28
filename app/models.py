@@ -6,7 +6,7 @@ from datetime import datetime, timezone
 from sqlalchemy import Boolean, Column, DateTime, Integer, String
 from app.database import Base
 
-'''converting python code to aan actual db table called flags'''
+'''converting python code to aan actual db table called flags- to check the correct schema has been written in the db sqlite3 flagforge.db ".schema flags"'''
 class Flag(Base):
 	__tablename__ = "flags"
 	id = Column(Integer, primary_key=True, index=True)

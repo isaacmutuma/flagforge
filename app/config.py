@@ -11,7 +11,6 @@ classes from pydrantic are used to authenticate app configurations
 '''
 
 
-
 class Settings(BaseSettings):
     database_url: str = "sqlite:///./flagforge.db"
 
