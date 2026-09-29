@@ -15,6 +15,7 @@ from sqlalchemy.orm import Session
 from app.models import Flag
 from app.schemas import FlagCreate, FlagUpdate
 
+import hashlib
 
 def create_flag(db: Session, flag: FlagCreate) -> Flag:
     db_flag = Flag(
@@ -61,3 +62,21 @@ def delete_flag(db: Session, key: str) -> bool:
     return True
 
 
+
+
+def bucket_user(user_id: str, flag_key: str) -> int:
+    """
+    Deterministically map a (user_id, flag_key) pair to a stable number
+    0-99. The same user + same flag always produces the same bucket, so
+    a user's experience of a flag never flips between requests — only
+    changing rollout_percentage moves the boundary they're compared
+    against.
+
+	Every user automatically gets a ticket number assigned to them for each feature flag (calculated using their user_id + flag_key).
+
+    Pure function: no database, no I/O. This is what lets it be tested
+    directly without touching the app or a running server at all.
+    """
+    combined = f"{user_id}:{flag_key}"
+    digest = hashlib.sha256(combined.encode("utf-8")).hexdigest()
+    return int(digest, 16) % 100

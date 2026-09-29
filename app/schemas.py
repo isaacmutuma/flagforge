@@ -46,3 +46,8 @@ class FlagResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+class EvaluationResponse(BaseModel):
+    flag_key: str
+    user_id: str
+    enabled: bool

@@ -10,12 +10,21 @@ from fastapi import FastAPI
 from app.database import Base, engine
 from app.routers import flags
 
-Base.metadata.create_all(bind=engine)
+from app.routers import evaluate, flags
 
+'''
+creates the database table  in the startup phase
+'''
+Base.metadata.create_all(bind=engine)
+'''
+initializes fastAPI
+'''
 app = FastAPI(title="flagforge", description="A feature flag service.")
 
-app.include_router(flags.router)
 
+#When main.py runs, it registers all routes into one big Routing Table inside the FastAPI instance.
+app.include_router(flags.router)
+app.include_router(evaluate.router)
 
 @app.get("/")
 def root():
